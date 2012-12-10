@@ -897,7 +897,10 @@ user_sessions_info(User, Host) ->
 	      {Now, Pid} = Session#session.sid,
 	      {_U, _Resource, Status, StatusText} = ejabberd_c2s:get_presence(Pid),
 	      Info = Session#session.info,
-	      Priority = Session#session.priority,
+	      Priority = case is_integer(Session#session.priority) of
+	                    true -> Session#session.priority;
+	                    false -> 0
+	                 end,
 	      Conn = proplists:get_value(conn, Info),
 	      {Ip, Port} = proplists:get_value(ip, Info),
 	      IPS = inet_parse:ntoa(Ip),
