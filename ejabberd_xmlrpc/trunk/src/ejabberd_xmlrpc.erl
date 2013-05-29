@@ -401,7 +401,12 @@ format_arg(Arg, integer)
     Arg;
 format_arg(Arg, string)
   when is_list(Arg) ->
-    Arg.
+    case {io_lib:printable_list(Arg), io_lib:printable_unicode_list(Arg)} of
+    {false, true} ->
+        binary_to_list(unicode:characters_to_binary(Arg));
+    {_, _} ->
+        Arg
+    end.
 
 
 %% -----------------------------
